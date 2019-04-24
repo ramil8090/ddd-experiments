@@ -1,0 +1,21 @@
+{
+    "name": "ramil8090/ddd-experiments",
+    "description": "Test DDD functionality components.",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "require": {
+        "beberlei/assert": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blog\\": "src/Blog"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blog\\": "tests/Blog"
+        }
+    }
+}

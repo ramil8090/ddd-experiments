@@ -1,0 +1,6 @@
+/.idea
+/Blog/vendor
+/Blog/.docker
+/Blog/composer.lock
+/Blog/.phpunit.result.cache
+
