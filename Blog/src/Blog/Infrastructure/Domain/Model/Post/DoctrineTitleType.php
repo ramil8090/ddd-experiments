@@ -7,7 +7,7 @@ use Blog\Domain\Model\Post\Title;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-class TitleType extends Type
+class DoctrineTitleType extends Type
 {
 
     /**

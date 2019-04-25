@@ -6,10 +6,10 @@
  * Time: 16:07
  */
 
-namespace Blog\Infrastructure\Domain\Model\Post;
+namespace Blog\Infrastructure\Domain\Model\Blog;
 
 
-use Blog\Domain\Model\Post\Status;
+use Blog\Domain\Model\Blog\Status;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -59,10 +59,8 @@ class DoctrineStatusType extends Type
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         switch ($value) {
-            case Status::RECENT:
-                return  Status::recent();
-            case Status::PUBLISHED:
-                return Status::published();
+            case Status::ACTIVE:
+                return  Status::active();
             case Status::DELETED:
                 return Status::deleted();
         }

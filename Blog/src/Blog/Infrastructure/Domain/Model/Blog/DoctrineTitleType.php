@@ -1,9 +1,9 @@
 <?php
 
-namespace Blog\Infrastructure\Domain\Model\Post;
+namespace Blog\Infrastructure\Domain\Model\Blog;
 
 
-use Blog\Domain\Model\Post\Title;
+use Blog\Domain\Model\Blog\Title;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 

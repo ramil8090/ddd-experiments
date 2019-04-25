@@ -1,0 +1,21 @@
+Blog\Domain\Model\Blog\Blog:
+  type: entity
+  id:
+    blogId:
+      column: id
+      type: BlogId
+  table: blogs
+  repositoryClass: Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogRepository
+  fields:
+    userId:
+      column: user_id
+      type: UserId
+    title:
+      column: title
+      type: BlogTitle
+    status:
+      column: status
+      type: BlogStatus
+    createdAt:
+      column: created_at
+      type: datetimetz

@@ -1,8 +1,10 @@
 <?php
 
-namespace Blog\Infrastructure\Domain\Model\Common;
+namespace Blog\Infrastructure\Domain\Model\Blog;
 
-class DoctrineUserIdType extends DoctrineEntityId
+use Blog\Infrastructure\Domain\Model\Common\DoctrineEntityId;
+
+class DoctrineBlogIdType extends DoctrineEntityId
 {
     public function getName()
     {

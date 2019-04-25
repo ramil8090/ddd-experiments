@@ -6,7 +6,10 @@
         "phpunit/phpunit": "^8.0"
     },
     "require": {
-        "beberlei/assert": "^3.2"
+        "beberlei/assert": "^3.2",
+        "doctrine/orm": "^2.6",
+        "ramsey/uuid": "^3.8",
+        "symfony/yaml": "^4.2"
     },
     "autoload": {
         "psr-4": {

@@ -24,13 +24,13 @@ interface PostRepository
     /**
      * @param Post $post
      */
-    public function remove(Post $post): void;
+    public function save(Post $post): void;
 
     /**
      * @param PostId $postId
-     * @return Post
+     * @return Post|null
      */
-    public function postOfId(PostId $postId): Post;
+    public function postOfId(PostId $postId): ?Post;
 
     /**
      * @param \DateTimeImmutable $sinceADate

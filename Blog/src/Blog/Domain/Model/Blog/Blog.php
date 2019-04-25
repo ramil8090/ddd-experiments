@@ -93,4 +93,18 @@ class Blog
         );
     }
 
+    public function title(): Title
+    {
+        return $this->title;
+    }
+
+    public function userId(): UserId
+    {
+        return $this->userId;
+    }
+
+    public function blogId(): BlogId
+    {
+        return $this->blogId;
+    }
 }

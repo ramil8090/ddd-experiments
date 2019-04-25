@@ -21,7 +21,7 @@ class Id
         $this->id = $id;
     }
 
-    public function getId() :string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -34,6 +34,6 @@ class Id
     ### Doctine need methods
     public function __toString()
     {
-        return $this->id;
+        return $this->getId();
     }
 }

@@ -24,11 +24,11 @@ interface BlogRepository
     /**
      * @param Blog $blog
      */
-    public function remove(Blog $blog): void;
+    public function save(Blog $blog): void;
 
     /**
      * @param BlogId $blogId
-     * @return Blog
+     * @return Blog|null
      */
-    public function blogOfId(BlogId $blogId): Blog;
+    public function blogOfId(BlogId $blogId): ?Blog;
 }

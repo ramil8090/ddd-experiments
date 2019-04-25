@@ -13,7 +13,7 @@ use Blog\Domain\Model\Post\Status;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-class StatusType extends Type
+class DoctrineStatusType extends Type
 {
 
     /**

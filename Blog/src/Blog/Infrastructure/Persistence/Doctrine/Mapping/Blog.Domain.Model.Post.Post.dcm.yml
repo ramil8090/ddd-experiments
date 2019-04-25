@@ -1,0 +1,31 @@
+Blog\Domain\Model\Post\Post:
+  type: entity
+  id:
+    postId:
+      column: id
+      type: PostId
+  table: posts
+  repositoryClass: Blog\Infrastructure\Domain\Model\Post\DoctrinePostRepository
+  fields:
+    userId:
+      column: user_id
+      type: UserId
+    blogId:
+      column: blog_id
+      type: BlogId
+    title:
+      column: title
+      type: PostTitle
+    body:
+      column: body
+      type: text
+    status:
+      column: status
+      type: PostStatus
+    createdAt:
+      column: created_at
+      type: datetimetz
+    publishedAt:
+      column: published_at
+      type: datetimetz
+      nullable: true

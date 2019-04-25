@@ -46,4 +46,9 @@ class Status
     {
         return $status->status() === $this->status;
     }
+
+    public function __toString()
+    {
+        return $this->status;
+    }
 }

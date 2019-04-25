@@ -6,92 +6,97 @@
  * Time: 18:19
  */
 
-namespace Blog\Domain\Model\Post;
+namespace Blog\Domain\Model\Blog;
 
 
 use Blog\Domain\Model\Blog\BlogId;
 use Blog\Domain\Model\Common\UserId;
-use Blog\Infrastructure\Domain\Model\Post\DoctrinePostRepository;
+use Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogRepository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use PHPUnit\Framework\TestCase;
 
-class DoctrinePostRepositoryTest extends TestCase
+class DoctrineBlogRepositoryTest extends TestCase
 {
     /**
-     * @var DoctrinePostRepository
+     * @var DoctrineBlogRepository
      */
-    private $postRepository;
+    private $blogRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->postRepository = $this->createPostRepository();
+        $this->blogRepository = $this->createBlogRepository();
     }
 
-    public function testItShouldRemovePost()
+    public function testItShouldLogicallyDeleteBlog()
     {
-        $post = $this->persistPost(
-            $blogId = new BlogId(1),
+        $blog = $this->persistBlog(
             $userId = new UserId(1),
-            $title = new Title('A Post Title'),
-            $body = 'A Post Body'
+            $title = new Title('A Blog Title')
         );
 
-        $this->postRepository->remove($post);
+        $blog->delete();
 
-        $this->assertPostExist($post->postId());
+        $this->blogRepository->save($blog);
+
+        $this->assertBlogExist($blog->blogId());
+        $this->assertBlogIsLogicallyDeleted($blog->blogId());
     }
 
-    private function assertPostExist($id)
+    private function assertBlogExist($id)
     {
-        $result = $this->postRepository->postOfId($id);
-        $this->assertNull($result);
+        $result = $this->blogRepository->blogOfId($id);
+        $this->assertNotNull($result);
     }
 
-    private function persistPost(BlogId $blogId, UserId $userId, Title $title, string $body)
+    private function assertBlogIsLogicallyDeleted($id)
     {
-        $this->postRepository->add(
-            $post = new Post(
-                $this->postRepository->nextIdentity(),
-                $blogId,
+        $result = $this->blogRepository->blogOfId($id);
+        $this->assertTrue($result->isDeleted());
+    }
+
+    private function persistBlog(UserId $userId, Title $title)
+    {
+        $this->blogRepository->add(
+            $blog = new Blog(
+                $this->blogRepository->nextIdentity(),
                 $userId,
-                $title,
-                $body
+                $title
             )
         );
 
-        return $post;
+        return $blog;
     }
 
     #################### Init repository ####################
     /**
-     * @return DoctrinePostRepository
+     * @return DoctrineBlogRepository
      */
-    private function createPostRepository()
+    private function createBlogRepository()
     {
         $this->addCustomTypes();
         $em = $this->initEntityManager();
         $this->initSchema($em);
 
-        return new DoctrinePostRepository($em);
+        return new DoctrineBlogRepository($em);
     }
 
     private function addCustomTypes()
     {
-        if (!Type::hasType('PostId')) {
-            Type::addType('PostId', '\Blog\Infrastructure\Domain\Model\Post\DoctrinePostIdType');
+        if (!Type::hasType('BlogId')) {
+            Type::addType('BlogId', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogIdType');
         }
 
-        if (!Type::hasType('PostTitle')) {
-            Type::addType('PostTitle', '\Blog\Infrastructure\Domain\Model\Post\DoctrineTitleType');
+        if (!Type::hasType('BlogTitle')) {
+            Type::addType('BlogTitle', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineTitleType');
         }
 
-        if (!Type::hasType('PostStatus')) {
-            Type::addType('PostStatus', '\Blog\Infrastructure\Domain\Model\Post\DoctrineStatusType');
+        if (!Type::hasType('BlogStatus')) {
+            Type::addType('BlogStatus', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineStatusType');
         }
 
         if (!Type::hasType('UserId')) {
@@ -118,7 +123,7 @@ class DoctrinePostRepositoryTest extends TestCase
     {
         $tool = new SchemaTool($em);
         $tool->createSchema([
-            $em->getClassMetadata('Blog\Domain\Model\Post\Post')
+            $em->getClassMetadata('Blog\Domain\Model\Blog\Blog')
         ]);
     }
 }
