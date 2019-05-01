@@ -9,6 +9,7 @@
 namespace Blog\Application\Service\Blog;
 
 
+use Blog\Application\DataTransformer\BlogDataTransformer;
 use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;
@@ -22,14 +23,25 @@ class DeleteBlogService implements ApplicationService
      * @var BlogRepository
      */
     private $blogRepository;
-
+    /**
+     * @var UserRole
+     */
     private $userRoleAdapter;
+    /**
+     * @var BlogDataTransformer
+     */
+    private $blogDataTransformer;
 
 
-    public function __construct(BlogRepository $blogRepository, UserRole $userRoleAdapter)
+    public function __construct(
+        BlogRepository $blogRepository,
+        UserRole $userRoleAdapter,
+        BlogDataTransformer $blogDataTransformer
+    )
     {
         $this->blogRepository = $blogRepository;
         $this->userRoleAdapter = $userRoleAdapter;
+        $this->blogDataTransformer = $blogDataTransformer;
     }
 
     /**
@@ -49,6 +61,10 @@ class DeleteBlogService implements ApplicationService
 
         $blog->delete();
         $this->blogRepository->save($blog);
+
+        $this->blogDataTransformer->write($blog);
+
+        return $this->blogDataTransformer->read();
     }
 
     private function assertUserHasPermissions(Blog $blog, UserId $userId): bool

@@ -156,4 +156,9 @@ class Post
     {
         return $this->blogId->getId() === $blogId->getId();
     }
+
+    public function creationDate(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }

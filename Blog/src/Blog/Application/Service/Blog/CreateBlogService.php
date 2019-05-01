@@ -9,6 +9,7 @@
 namespace Blog\Application\Service\Blog;
 
 
+use Blog\Application\DataTransformer\BlogDataTransformer;
 use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogRepository;
@@ -22,9 +23,18 @@ class CreateBlogService implements ApplicationService
      */
     private $blogRepository;
 
-    public function __construct(BlogRepository $blogRepository)
+    /**
+     * @var BlogDataTransformer
+     */
+    private $blogDataTransformer;
+
+    public function __construct(
+        BlogRepository $blogRepository,
+        BlogDataTransformer $blogDataTransformer
+    )
     {
         $this->blogRepository = $blogRepository;
+        $this->blogDataTransformer = $blogDataTransformer;
     }
 
     /**
@@ -43,5 +53,9 @@ class CreateBlogService implements ApplicationService
         );
 
         $this->blogRepository->add($blog);
+
+        $this->blogDataTransformer->write($blog);
+
+        return $this->blogDataTransformer->read();
     }
 }
