@@ -9,7 +9,7 @@
 namespace Blog\Application\Service\Blog;
 
 
-use Blog\Application\DataTransformer\BlogDataTransformer;
+use Blog\Application\DataTransformer\Blog\BlogDataTransformer;
 use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogRepository;
@@ -28,6 +28,11 @@ class CreateBlogService implements ApplicationService
      */
     private $blogDataTransformer;
 
+    /**
+     * CreateBlogService constructor.
+     * @param BlogRepository $blogRepository
+     * @param BlogDataTransformer $blogDataTransformer
+     */
     public function __construct(
         BlogRepository $blogRepository,
         BlogDataTransformer $blogDataTransformer

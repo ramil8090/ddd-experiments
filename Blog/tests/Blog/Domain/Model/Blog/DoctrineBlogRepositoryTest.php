@@ -20,6 +20,8 @@ use PHPUnit\Framework\TestCase;
 
 class DoctrineBlogRepositoryTest extends TestCase
 {
+    use CreateDoctrineBlogRepositoryTrait;
+
     /**
      * @var DoctrineBlogRepository
      */
@@ -70,60 +72,5 @@ class DoctrineBlogRepositoryTest extends TestCase
         );
 
         return $blog;
-    }
-
-    #################### Init repository ####################
-    /**
-     * @return DoctrineBlogRepository
-     */
-    private function createBlogRepository()
-    {
-        $this->addCustomTypes();
-        $em = $this->initEntityManager();
-        $this->initSchema($em);
-
-        return new DoctrineBlogRepository($em);
-    }
-
-    private function addCustomTypes()
-    {
-        if (!Type::hasType('BlogId')) {
-            Type::addType('BlogId', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogIdType');
-        }
-
-        if (!Type::hasType('BlogTitle')) {
-            Type::addType('BlogTitle', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineTitleType');
-        }
-
-        if (!Type::hasType('BlogStatus')) {
-            Type::addType('BlogStatus', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineStatusType');
-        }
-
-        if (!Type::hasType('UserId')) {
-            Type::addType('UserId', '\Blog\Infrastructure\Domain\Model\Common\DoctrineUserIdType');
-        }
-
-        if (!Type::hasType('BlogId')) {
-            Type::addType('BlogId', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogIdType');
-        }
-    }
-
-    protected function initEntityManager()
-    {
-        return EntityManager::create(
-            ['url' => 'sqlite:///:memory:'],
-            Setup::createYAMLMetadataConfiguration(
-                ['/app/src/Blog/Infrastructure/Persistence/Doctrine/Mapping'],
-                $devMode = true
-            )
-        );
-    }
-
-    private function initSchema(EntityManager $em)
-    {
-        $tool = new SchemaTool($em);
-        $tool->createSchema([
-            $em->getClassMetadata('Blog\Domain\Model\Blog\Blog')
-        ]);
     }
 }

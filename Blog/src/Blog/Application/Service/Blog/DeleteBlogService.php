@@ -9,7 +9,7 @@
 namespace Blog\Application\Service\Blog;
 
 
-use Blog\Application\DataTransformer\BlogDataTransformer;
+use Blog\Application\DataTransformer\Blog\BlogDataTransformer;
 use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;

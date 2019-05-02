@@ -6,7 +6,7 @@
  * Time: 15:01
  */
 
-namespace Blog\Application\DataTransformer;
+namespace Blog\Application\DataTransformer\Blog;
 
 
 use Blog\Domain\Model\Blog\Blog;
