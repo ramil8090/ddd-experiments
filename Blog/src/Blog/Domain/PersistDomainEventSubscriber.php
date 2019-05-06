@@ -6,24 +6,25 @@
  * Time: 12:18
  */
 
-namespace Blog\Domain\Model\Common\Event;
+namespace Blog\Domain;
 
 
-use Blog\Domain\DomainEvent;
-use Blog\Domain\DomainEventSubscriber;
+use Blog\Application\EventStore;
 
 class PersistDomainEventSubscriber implements DomainEventSubscriber
 {
     private $eventStore;
 
-    public function __construct(EventStore $anEventStore)
+    public function __construct(EventStore $eventStore)
     {
-        $this->eventStore = $anEventStore;
+        $this->eventStore = $eventStore;
     }
+
     public function handle(DomainEvent $domainEvent): void
     {
         $this->eventStore->append($domainEvent);
     }
+
     public function isSubscribedTo(DomainEvent $domainEvent): bool
     {
         return true;

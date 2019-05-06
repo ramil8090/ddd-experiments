@@ -9,7 +9,9 @@
         "beberlei/assert": "^3.2",
         "doctrine/orm": "^2.6",
         "ramsey/uuid": "^3.8",
-        "symfony/yaml": "^4.2"
+        "symfony/yaml": "^4.2",
+        "jms/serializer": "^3.0",
+        "php-amqplib/php-amqplib": "^2.9"
     },
     "autoload": {
         "psr-4": {

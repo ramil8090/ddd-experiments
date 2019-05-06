@@ -6,7 +6,7 @@
  * Time: 10:52
  */
 
-namespace Blog\Domain\Model\Common\Event;
+namespace Blog\Domain\Event;
 
 
 use Blog\Domain\DomainEvent;
@@ -22,7 +22,7 @@ class StoredEvent implements DomainEvent
      */
     private $eventBody;
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutableImmutable
      */
     private $occurredOn;
     /**
@@ -31,10 +31,10 @@ class StoredEvent implements DomainEvent
     private $typeName;
     /**
      * @param string $typeName
-     * @param \DateTime $occurredOn
+     * @param \DateTimeImmutable $occurredOn
      * @param string $eventBody
      */
-    public function __construct($typeName, \DateTime $occurredOn, $eventBody)
+    public function __construct($typeName, \DateTimeImmutable $occurredOn, $eventBody)
     {
         $this->eventBody = $eventBody;
         $this->typeName = $typeName;
@@ -62,9 +62,9 @@ class StoredEvent implements DomainEvent
         return $this->typeName;
     }
     /**
-     * @return \DateTimeImmutable
+     * @return \DateTimeImmutableImmutable
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): \DateTimeImmutableImmutable
     {
         return $this->occurredOn;
     }
