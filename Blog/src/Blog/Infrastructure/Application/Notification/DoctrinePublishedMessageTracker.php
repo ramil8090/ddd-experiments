@@ -10,17 +10,37 @@ namespace Blog\Infrastructure\Application\Notification;
 
 
 use Blog\Application\Notification\PublishedMessageTracker;
-use Doctrine\ORM\EntityRepository;
+use Blog\Domain\Event\PublishedMessage;
+use Blog\Domain\Event\StoredEvent;
+use Doctrine\ORM\EntityManager;
 
-class DoctrinePublishedMessageTracker extends EntityRepository implements PublishedMessageTracker
+class DoctrinePublishedMessageTracker implements PublishedMessageTracker
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @param $aTypeName
      * @return int
      */
     public function mostRecentPublishedMessageId($aTypeName)
     {
-        $messageTracked = $this->findOneByTypeName($aTypeName);
+        $query = $this->em->createQueryBuilder();
+
+        $messageTracked = $query
+            ->select('p')
+            ->from('Blog\Domain\Event\PublishedMessage', 'p')
+            ->where('p.typeName = :typeName')
+            ->setParameter(':typeName', $aTypeName)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         if (!$messageTracked) {
             return null;
@@ -41,7 +61,16 @@ class DoctrinePublishedMessageTracker extends EntityRepository implements Publis
 
         $maxId = $notification->eventId();
 
-        $publishedMessage = $this->find($aTypeName);
+        $query = $this->em->createQueryBuilder();
+
+        $publishedMessage = $query
+            ->select('p')
+            ->from('Blog\Domain\Event\PublishedMessage', 'p')
+            ->where('p.typeName = :typeName')
+            ->setParameter(':typeName', $aTypeName)
+            ->getQuery()
+            ->getOneOrNullResult();
+
         if (!$publishedMessage) {
             $publishedMessage = new PublishedMessage(
                 $aTypeName,
@@ -51,7 +80,7 @@ class DoctrinePublishedMessageTracker extends EntityRepository implements Publis
 
         $publishedMessage->updateMostRecentPublishedMessageId($maxId);
 
-        $this->getEntityManager()->persist($publishedMessage);
-        $this->getEntityManager()->flush($publishedMessage);
+        $this->em->persist($publishedMessage);
+        $this->em->flush($publishedMessage);
     }
 }

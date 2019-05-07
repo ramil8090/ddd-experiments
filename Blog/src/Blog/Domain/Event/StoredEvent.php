@@ -22,7 +22,7 @@ class StoredEvent implements DomainEvent
      */
     private $eventBody;
     /**
-     * @var \DateTimeImmutableImmutable
+     * @var \DateTimeImmutable
      */
     private $occurredOn;
     /**
@@ -62,9 +62,9 @@ class StoredEvent implements DomainEvent
         return $this->typeName;
     }
     /**
-     * @return \DateTimeImmutableImmutable
+     * @return \DateTimeImmutable
      */
-    public function occurredOn(): \DateTimeImmutableImmutable
+    public function occurredOn(): \DateTimeImmutable
     {
         return $this->occurredOn;
     }

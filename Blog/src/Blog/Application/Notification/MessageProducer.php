@@ -22,7 +22,7 @@ interface MessageProducer
      * @param string $notificationMessage
      * @param string $notificationType
      * @param int $notificationId
-     * @param \DateTime $notificationOccurredOn
+     * @param \DateTimeImmutable $notificationOccurredOn
      * @return
      */
     public function send(
@@ -30,7 +30,7 @@ interface MessageProducer
         $notificationMessage,
         $notificationType,
         $notificationId,
-        \DateTime $notificationOccurredOn
+        \DateTimeImmutable $notificationOccurredOn
     );
 
     /**

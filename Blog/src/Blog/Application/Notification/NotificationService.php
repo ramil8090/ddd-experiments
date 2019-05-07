@@ -11,15 +11,28 @@ namespace Blog\Application\Notification;
 
 
 
-use Blog\Application\EventStore;
+use Blog\Domain\Event\EventStore;
 use Blog\Domain\Event\StoredEvent;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 
 class NotificationService
 {
+    /**
+     * @var SerializerInterface
+     */
     private $serializer;
+    /**
+     * @var EventStore
+     */
     private $eventStore;
+    /**
+     * @var PublishedMessageTracker
+     */
     private $publishedMessageTracker;
+    /**
+     * @var MessageProducer
+     */
     private $messageProducer;
 
     public function __construct(
@@ -113,7 +126,7 @@ class NotificationService
     }
 
     /**
-     * @return \JMS\Serializer\Serializer
+     * @return \JMS\Serializer\SerializerInterface
      */
     private function serializer()
     {
@@ -122,8 +135,7 @@ class NotificationService
                 SerializerBuilder::create()
                     ->addMetadataDir(__DIR__ . '/../../Infrastructure/Application/Serialization/JMS/Config')
                     ->setCacheDir(__DIR__ . '/../../../var/cache/jms-serializer')
-                    ->build()
-            ;
+                    ->build();
         }
         return $this->serializer;
     }

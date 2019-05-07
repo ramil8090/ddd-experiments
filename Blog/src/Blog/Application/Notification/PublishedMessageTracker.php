@@ -9,7 +9,7 @@
 namespace Blog\Application\Notification;
 
 
-use Blog\Domain\Model\Common\Event\StoredEvent;
+use Blog\Domain\Event\StoredEvent;
 
 interface PublishedMessageTracker
 {

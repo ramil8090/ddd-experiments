@@ -1,7 +1,7 @@
 Blog\Domain\Event\StoredEvent:
   type: entity
   table: event
-  repositoryClass: Ddd\Infrastructure\Application\Notification\DoctrineEventStore
+  repositoryClass: Blog\Infrastructure\Application\Notification\DoctrineEventStore
   id:
     eventId:
       type: integer

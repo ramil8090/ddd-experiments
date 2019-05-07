@@ -19,7 +19,7 @@ class RabbitMqMessageProducer extends RabbitMqMessaging implements MessageProduc
      * @param string $notificationMessage
      * @param string $notificationType
      * @param int $notificationId
-     * @param \DateTime $notificationOccurredOn
+     * @param \DateTimeImmutable $notificationOccurredOn
      */
     public function send($exchangeName, $notificationMessage, $notificationType, $notificationId, \DateTime $notificationOccurredOn)
     {

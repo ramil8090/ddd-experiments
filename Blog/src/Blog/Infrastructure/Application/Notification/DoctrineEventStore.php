@@ -9,15 +9,28 @@
 namespace Blog\Infrastructure\Application\Notification;
 
 
-use Blog\Application\EventStore;
+use Blog\Domain\Event\EventStore;
 use Blog\Domain\DomainEvent;
 use Blog\Domain\Event\StoredEvent;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 
-class DoctrineEventStore extends EntityRepository implements EventStore
+class DoctrineEventStore implements EventStore
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+    /**
+     * @var SerializerInterface
+     */
     private $serializer;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
 
     public function append(DomainEvent $domainEvent)
     {
@@ -27,13 +40,17 @@ class DoctrineEventStore extends EntityRepository implements EventStore
             $this->serializer()->serialize($domainEvent, 'json')
         );
 
-        $this->getEntityManager()->persist($storedEvent);
-        $this->getEntityManager()->flush($storedEvent);
+        $this->em->persist($storedEvent);
+        $this->em->flush($storedEvent);
     }
 
     public function allStoredEventsSince($eventId)
     {
-        $query = $this->createQueryBuilder('e');
+        $query = $this->em->createQueryBuilder();
+
+        $query->select('e');
+
+        $query->from('Blog\Domain\Event\StoredEvent', 'e');
 
         if ($eventId) {
             $query->where('e.eventId > :eventId');

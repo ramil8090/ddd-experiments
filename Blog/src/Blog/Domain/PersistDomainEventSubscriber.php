@@ -9,7 +9,7 @@
 namespace Blog\Domain;
 
 
-use Blog\Application\EventStore;
+use Blog\Domain\Event\EventStore;
 
 class PersistDomainEventSubscriber implements DomainEventSubscriber
 {
