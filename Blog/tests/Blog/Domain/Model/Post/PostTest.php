@@ -5,7 +5,7 @@ namespace Blog\Domain\Model\Post;
 use Blog\Domain\DomainEventPublisher;
 use Blog\Domain\Model\Blog\BlogId;
 use Blog\Domain\Model\Common\SpySubscriber;
-use Blog\Domain\Model\Common\UserId;
+use Blog\Domain\Model\User\UserId;
 use PHPUnit\Framework\TestCase;
 
 class PostTest extends TestCase

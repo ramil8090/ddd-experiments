@@ -9,7 +9,7 @@
 namespace Blog\Domain\Model\Blog;
 
 
-use Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogRepository;
+use Blog\Infrastructure\Persistence\Doctrine\Repository\DoctrineBlogRepository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -32,24 +32,21 @@ trait CreateDoctrineBlogRepositoryTrait
     private function addCustomTypes()
     {
         if (!Type::hasType('BlogId')) {
-            Type::addType('BlogId', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogIdType');
+            Type::addType('BlogId', '\Blog\Infrastructure\Persistence\Doctrine\Type\Blog\DoctrineBlogIdType');
         }
 
         if (!Type::hasType('BlogTitle')) {
-            Type::addType('BlogTitle', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineTitleType');
+            Type::addType('BlogTitle', '\Blog\Infrastructure\Persistence\Doctrine\Type\Blog\DoctrineTitleType');
         }
 
         if (!Type::hasType('BlogStatus')) {
-            Type::addType('BlogStatus', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineStatusType');
+            Type::addType('BlogStatus', '\Blog\Infrastructure\Persistence\Doctrine\Type\Blog\DoctrineStatusType');
         }
 
         if (!Type::hasType('UserId')) {
-            Type::addType('UserId', '\Blog\Infrastructure\Domain\Model\Common\DoctrineUserIdType');
+            Type::addType('UserId', '\Blog\Infrastructure\Persistence\Doctrine\Type\User\DoctrineUserIdType');
         }
 
-        if (!Type::hasType('BlogId')) {
-            Type::addType('BlogId', '\Blog\Infrastructure\Domain\Model\Blog\DoctrineBlogIdType');
-        }
     }
 
     protected function initEntityManager()

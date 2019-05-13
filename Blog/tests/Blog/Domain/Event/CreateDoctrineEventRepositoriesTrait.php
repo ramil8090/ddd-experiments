@@ -9,8 +9,8 @@
 namespace Blog\Domain\Event;
 
 
-use Blog\Infrastructure\Application\Notification\DoctrineEventStore;
-use Blog\Infrastructure\Application\Notification\DoctrinePublishedMessageTracker;
+use Blog\Infrastructure\Persistence\Doctrine\Repository\Notification\DoctrineEventStore;
+use Blog\Infrastructure\Persistence\Doctrine\Repository\Notification\DoctrinePublishedMessageTracker;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -45,7 +45,7 @@ trait CreateDoctrineEventRepositoriesTrait
         return EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
             Setup::createYAMLMetadataConfiguration(
-                ['/app/src/Blog/Infrastructure/Application/Persistence/Doctrine/Config'],
+                ['/app/src/Blog/Infrastructure/Persistence/Doctrine/Mapping/Notification'],
                 $devMode = true
             )
         );

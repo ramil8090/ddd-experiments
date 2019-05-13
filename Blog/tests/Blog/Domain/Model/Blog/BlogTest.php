@@ -11,7 +11,7 @@ namespace Blog\Domain\Model\Blog;
 
 use Blog\Domain\DomainEventPublisher;
 use Blog\Domain\Model\Common\SpySubscriber;
-use Blog\Domain\Model\Common\UserId;
+use Blog\Domain\Model\User\UserId;
 use Blog\Domain\Model\Post\PostId;
 use PHPUnit\Framework\TestCase;
 

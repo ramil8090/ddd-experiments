@@ -14,7 +14,7 @@ use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogRepository;
 use Blog\Domain\Model\Blog\Title;
-use Blog\Domain\Model\Common\UserId;
+use Blog\Domain\Model\User\UserId;
 
 class CreateBlogService implements ApplicationService
 {

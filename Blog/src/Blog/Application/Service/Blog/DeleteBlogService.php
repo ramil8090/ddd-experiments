@@ -14,8 +14,8 @@ use Blog\Application\Service\ApplicationService;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;
 use Blog\Domain\Model\Blog\BlogRepository;
-use Blog\Domain\Model\Common\UserId;
-use Blog\Domain\Model\Common\UserRole;
+use Blog\Domain\Model\User\UserId;
+use Blog\Domain\Model\User\UserService;
 
 class DeleteBlogService implements ApplicationService
 {
@@ -24,9 +24,9 @@ class DeleteBlogService implements ApplicationService
      */
     private $blogRepository;
     /**
-     * @var UserRole
+     * @var UserService
      */
-    private $userRoleAdapter;
+    private $userService;
     /**
      * @var BlogDataTransformer
      */
@@ -35,12 +35,12 @@ class DeleteBlogService implements ApplicationService
 
     public function __construct(
         BlogRepository $blogRepository,
-        UserRole $userRoleAdapter,
+        UserService $userService,
         BlogDataTransformer $blogDataTransformer
     )
     {
         $this->blogRepository = $blogRepository;
-        $this->userRoleAdapter = $userRoleAdapter;
+        $this->userService = $userService;
         $this->blogDataTransformer = $blogDataTransformer;
     }
 
@@ -69,6 +69,6 @@ class DeleteBlogService implements ApplicationService
 
     private function assertUserHasPermissions(Blog $blog, UserId $userId): bool
     {
-        return $blog->isOwnedBy($userId) || $this->userRoleAdapter->isModerator($userId);
+        return $blog->isOwnedBy($userId) || $this->userService->isModerator($userId);
     }
 }

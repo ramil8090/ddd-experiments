@@ -10,7 +10,7 @@ namespace Blog\Domain\Model\Post;
 
 
 use Blog\Domain\Model\Blog\BlogId;
-use Blog\Domain\Model\Common\UserId;
+use Blog\Domain\Model\User\UserId;
 
 class PostBuilder
 {

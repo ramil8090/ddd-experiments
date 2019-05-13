@@ -4,7 +4,7 @@ namespace Blog\Domain\Model\Blog;
 
 
 use Blog\Domain\DomainEventPublisher;
-use Blog\Domain\Model\Common\UserId;
+use Blog\Domain\Model\User\UserId;
 use Blog\Domain\Model\Post\Post;
 use Blog\Domain\Model\Post\PostId;
 
