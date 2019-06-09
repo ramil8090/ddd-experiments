@@ -6,10 +6,12 @@
  * Time: 12:18
  */
 
-namespace Blog\Domain;
+namespace Blog\Application;
 
 
-use Blog\Domain\Event\EventStore;
+use Blog\Application\EventStore\EventStore;
+use Blog\Domain\DomainEvent;
+use Blog\Domain\DomainEventSubscriber;
 
 class PersistDomainEventSubscriber implements DomainEventSubscriber
 {

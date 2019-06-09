@@ -6,7 +6,7 @@
  * Time: 14:56
  */
 
-namespace Blog\Domain\Model\Common;
+namespace Blog\Domain\Model;
 
 
 class Id

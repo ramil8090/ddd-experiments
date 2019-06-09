@@ -6,7 +6,7 @@
  * Time: 10:52
  */
 
-namespace Blog\Domain\Event;
+namespace Blog\Application\EventStore;
 
 
 use Blog\Domain\DomainEvent;

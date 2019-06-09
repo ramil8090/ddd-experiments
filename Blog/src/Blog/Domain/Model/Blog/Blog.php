@@ -3,21 +3,25 @@
 namespace Blog\Domain\Model\Blog;
 
 
-use Blog\Domain\DomainEventPublisher;
-use Blog\Domain\Model\User\UserId;
+use Blog\Domain\AggregateRoot;
+use Blog\Domain\EventTrait;
+use Blog\Domain\Model\Member\Author;
+use Blog\Domain\Model\Member\Owner;
 use Blog\Domain\Model\Post\Post;
 use Blog\Domain\Model\Post\PostId;
 
-class Blog
+class Blog implements AggregateRoot
 {
+    use EventTrait;
+
     /**
      * @var BlogId
      */
     private $blogId;
     /**
-     * @var UserId
+     * @var Owner
      */
-    private $userId;
+    private $owner;
     /**
      * @var Title
      */
@@ -27,24 +31,23 @@ class Blog
      */
     private $status;
     /**
-     * @var \DateTimeImmutable
+     * @var array
      */
-    private $createdAt;
+    private $authors;
 
     public function __construct(
         BlogId $blogId,
-        UserId $userId,
+        Owner $owner,
         Title $title
     )
     {
         $this->blogId = $blogId;
-        $this->userId = $userId;
+        $this->owner = $owner;
         $this->title = $title;
-
         $this->status = Status::active();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->authors = [];
 
-        DomainEventPublisher::instance()->publish(new BlogCreated(
+        $this->recordEvent(new BlogCreated(
             $blogId
         ));
     }
@@ -54,42 +57,97 @@ class Blog
         return $this->status->equal(Status::active());
     }
 
-    public function creationDate(): ?\DateTimeImmutable
+    public function isArchived(): bool
     {
-        return $this->createdAt;
+        return $this->status->equal(Status::archived());
     }
 
-    public function delete(): void
+    public function archive(): void
     {
-        $this->status = Status::deleted();
+        if ($this->status->equal(Status::archived())) {
+            throw new \DomainException('A blog is already archived.');
+        }
 
-        DomainEventPublisher::instance()->publish(new BlogDeleted(
+        $this->status = Status::archived();
+
+        $this->recordEvent(new BlogArchived(
             $this->blogId
         ));
     }
 
-    public function isDeleted(): bool
+    public function restore(): void
     {
-        return $this->status->equal(Status::deleted());
+        if ($this->status->equal(Status::active())) {
+            throw new \DomainException('A blog is already active.');
+        }
+
+        $this->status = Status::active();
+
+        $this->recordEvent(new BlogRestored(
+           $this->blogId
+        ));
     }
 
-    public function isOwnedBy(UserId $userId): bool
+    public function appendAuthor(Author $author): void
     {
-        return $this->userId->getId() === $userId->getId();
+        if ($this->hasAuthor($author)) {
+            throw new \DomainException('An author is already exists.');
+        }
+
+        $this->authors[] = $author;
+
+        $this->recordEvent(new BlogAuthorAppended(
+            $this->blogId,
+            $author
+        ));
     }
 
-    public function createPost(PostId $postId, \Blog\Domain\Model\Post\Title $title, $body): Post
+    public function detachAuthor(Author $author): void
     {
-        if ($this->isDeleted()) {
-            throw new \DomainException("Can't create post in deleted blog.");
+        $index = array_search($author, $this->authors);
+        if ( $index !== false ) {
+
+            unset( $this->authors[$index] );
+
+            $this->recordEvent(new BlogAuthorDetached(
+                $this->blogId,
+                $author
+            ));
+        }
+    }
+
+    public function hasAuthor(Author $author): bool
+    {
+        $author = array_filter($this->authors, function ($currentAuthor) use ($author) {
+            if ($currentAuthor->equal($author)) {
+                return $currentAuthor;
+            }
+        });
+
+        return $author != null;
+    }
+
+    public function createPost(
+        PostId $postId,
+        \Blog\Domain\Model\Post\Title $title,
+        string $content,
+        Author $author
+    ): Post
+    {
+        if ($this->isArchived()) {
+            throw new \DomainException("Error create post. A blog is archived.");
+        }
+
+        if (!$this->hasAuthor($author)) {
+            throw new \DomainException("An author not found.");
         }
 
         return new Post(
             $postId,
             $this->blogId,
-            $this->userId,
+            $author,
             $title,
-            $body
+            $content
         );
     }
 
@@ -98,13 +156,18 @@ class Blog
         return $this->title;
     }
 
-    public function userId(): UserId
-    {
-        return $this->userId;
-    }
-
     public function blogId(): BlogId
     {
         return $this->blogId;
+    }
+
+    public function authors(): array
+    {
+        return $this->authors;
+    }
+
+    public function owner(): Owner
+    {
+        return $this->owner;
     }
 }

@@ -4,9 +4,9 @@ namespace Blog\Infrastructure\Service;
 
 use Blog\Domain\Model\User\Moderator;
 use Blog\Domain\Model\User\UserId;
-use Blog\Domain\Model\User\UserService;
+use Blog\Domain\Model\User\MemberService;
 
-class TranslatingUserService implements UserService
+class TranslatingMemberService implements MemberService
 {
     private $userInRoleAdapter;
 

@@ -3,13 +3,17 @@
 namespace Blog\Domain\Model\Post;
 
 
+use Blog\Domain\AggregateRoot;
 use Blog\Domain\DomainEventPublisher;
+use Blog\Domain\EventTrait;
 use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;
-use Blog\Domain\Model\User\UserId;
+use Blog\Domain\Model\Member\Author;
 
-class Post
+class Post implements AggregateRoot
 {
+    use EventTrait;
+
     /**
      * @var PostId
      */
@@ -19,9 +23,9 @@ class Post
      */
     private $blogId;
     /**
-     * @var UserId
+     * @var Author
      */
-    private $userId;
+    private $author;
     /**
      * @var Title
      */
@@ -29,39 +33,29 @@ class Post
     /**
      * @var string
      */
-    private $body;
+    private $content;
     /**
      * @var Status
      */
     private $status;
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $createdAt;
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $publishedAt;
 
 
     public function __construct(
         PostId $postId,
         BlogId $blogId,
-        UserId $userId,
+        Author $author,
         Title $title,
-        string $body)
+        string $content)
     {
         $this->postId = $postId;
         $this->blogId = $blogId;
-        $this->userId = $userId;
+        $this->author = $author;
         $this->title = $title;
-        $this->body = $body;
+        $this->content = $content;
 
-        $this->status = Status::recent();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->status = Status::newPost();
 
-
-        DomainEventPublisher::instance()->publish(new PostCreated(
+        $this->recordEvent(new PostCreated(
             $postId
         ));
     }
@@ -102,16 +96,6 @@ class Post
         return $this->status->equal(Status::deleted());
     }
 
-    public function publicationDate(): ?\DateTimeImmutable
-    {
-        return $this->publishedAt;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->status->equal(Status::published());
-    }
-
     public function updateTitle(Title $title): void
     {
         $this->title = $title;
@@ -122,34 +106,19 @@ class Post
         ));
     }
 
-    public function updateBody(string $body): void
+    public function updateBody(string $content): void
     {
-        $this->body = $body;
+        $this->content = $content;
 
         DomainEventPublisher::instance()->publish(new PostBodyUpdated(
             $this->postId,
-            $body
+            $content
         ));
     }
 
-    public function postId(): PostId
+    public function isAuthor(Author $author): bool
     {
-        return $this->postId;
-    }
-
-    public function body(): string
-    {
-        return $this->body;
-    }
-
-    public function title(): Title
-    {
-        return $this->title;
-    }
-
-    public function isAuthor(UserId $userId): bool
-    {
-        return $this->userId->getId() === $userId->getId();
+        return $this->author->equal($author);
     }
 
     public function belongsTo(BlogId $blogId): bool
@@ -157,8 +126,29 @@ class Post
         return $this->blogId->getId() === $blogId->getId();
     }
 
-    public function creationDate(): \DateTimeImmutable
+    public function postId(): PostId
     {
-        return $this->createdAt;
+        return $this->postId;
     }
+
+    public function blogId(): BlogId
+    {
+        return $this->blogId;
+    }
+
+    public function content(): string
+    {
+        return $this->content;
+    }
+
+    public function author(): Author
+    {
+        return $this->author;
+    }
+
+    public function title(): Title
+    {
+        return $this->title;
+    }
+
 }

@@ -6,7 +6,7 @@
  * Time: 11:35
  */
 
-namespace Blog\Domain\Event;
+namespace Blog\Application\EventStore;
 
 
 interface PublishableDomainEvent

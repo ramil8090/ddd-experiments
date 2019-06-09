@@ -9,7 +9,7 @@
 namespace Blog\Domain\Model\Post;
 
 
-use Blog\Domain\Model\Common\Id;
+use Blog\Domain\Model\Id;
 
 class PostId extends Id
 {

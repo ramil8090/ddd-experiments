@@ -10,8 +10,9 @@ namespace Blog\Domain\Model\Blog;
 
 
 use Blog\Domain\DomainEvent;
+use Blog\Domain\Model\Member\Author;
 
-class BlogDeleted implements DomainEvent
+class BlogAuthorDetached implements DomainEvent
 {
     /**
      * @var \DateTimeImmutable
@@ -21,16 +22,26 @@ class BlogDeleted implements DomainEvent
      * @var BlogId
      */
     private $blogId;
+    /**
+     * @var Author
+     */
+    private $author;
 
-    public function __construct(BlogId $blogId)
+    public function __construct(BlogId $blogId, Author $author)
     {
         $this->blogId = $blogId;
+        $this->author = $author;
         $this->occurredOn = new \DateTimeImmutable();
     }
 
     public function blogId(): BlogId
     {
         return $this->blogId;
+    }
+
+    public function author(): Author
+    {
+        return $this->author;
     }
 
     public function occurredOn(): \DateTimeImmutable

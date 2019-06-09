@@ -6,10 +6,10 @@
  * Time: 19:05
  */
 
-namespace Blog\Domain\Model\User;
+namespace Blog\Domain\Model\Member;
 
 
-interface UserService
+interface MemberService
 {
     /**
      * @param UserId $userId

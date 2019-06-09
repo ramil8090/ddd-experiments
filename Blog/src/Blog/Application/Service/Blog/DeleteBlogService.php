@@ -15,7 +15,7 @@ use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;
 use Blog\Domain\Model\Blog\BlogRepository;
 use Blog\Domain\Model\User\UserId;
-use Blog\Domain\Model\User\UserService;
+use Blog\Domain\Model\User\MemberService;
 
 class DeleteBlogService implements ApplicationService
 {
@@ -24,7 +24,7 @@ class DeleteBlogService implements ApplicationService
      */
     private $blogRepository;
     /**
-     * @var UserService
+     * @var MemberService
      */
     private $userService;
     /**
@@ -35,7 +35,7 @@ class DeleteBlogService implements ApplicationService
 
     public function __construct(
         BlogRepository $blogRepository,
-        UserService $userService,
+        MemberService $userService,
         BlogDataTransformer $blogDataTransformer
     )
     {

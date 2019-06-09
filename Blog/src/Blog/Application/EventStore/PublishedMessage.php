@@ -6,7 +6,7 @@
  * Time: 11:34
  */
 
-namespace Blog\Domain\Event;
+namespace Blog\Application\EventStore;
 
 
 class PublishedMessage

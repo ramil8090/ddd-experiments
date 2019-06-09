@@ -11,44 +11,57 @@ namespace Blog\Domain\Model\Post;
 
 class Status
 {
-    const RECENT = 'recent';
-    const PUBLISHED = 'published';
+    const NEW = 'new';
+    const APPROVED = 'approved';
+    const REJECTED = 'rejected';
     const DELETED = 'deleted';
 
-    private $status;
+    private $value;
+    private $date;
 
-    private function __construct($status)
+    private function __construct(string $value, ?\DateTimeImmutable $date = null)
     {
-        $this->status = $status;
+        $this->value = $value;
+        $this->date = $date;
     }
 
-    public static function recent(): self
+    public static function newPost(): self
     {
-        return new self(self::RECENT);
+        return new self(self::NEW, new \DateTimeImmutable());
     }
 
-    public static function published(): self
+    public static function approved(): self
     {
-        return new self(self::PUBLISHED);
+        return new self(self::APPROVED, new \DateTimeImmutable());
+    }
+
+    public static function rejected(): self
+    {
+        return new self(self::REJECTED, new \DateTimeImmutable());
     }
 
     public static function deleted(): self
     {
-        return new self(self::DELETED);
+        return new self(self::DELETED, new \DateTimeImmutable());
     }
 
-    public function status(): string
+    public function value(): string
     {
-        return $this->status;
+        return $this->value;
     }
 
-    public function equal(Status $status): bool
+    public function date(): ?\DateTimeImmutable
     {
-        return $status->status() === $this->status;
+        return $this->date;
+    }
+
+    public function equal(Status $value): bool
+    {
+        return $value->value() === $this->value;
     }
 
     public function __toString()
     {
-        return $this->status;
+        return $this->value;
     }
 }

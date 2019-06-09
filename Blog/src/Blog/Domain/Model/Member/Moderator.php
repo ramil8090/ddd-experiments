@@ -6,10 +6,10 @@
  * Time: 11:23
  */
 
-namespace Blog\Domain\Model\User;
+namespace Blog\Domain\Model\Member;
 
 
-class Moderator extends User
+class Moderator extends Member
 {
 
 }
