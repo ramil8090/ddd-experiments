@@ -28,7 +28,7 @@ class BlogTest extends TestCase
             ),
             new Title('A Blog Title')
         );
-
+        $this->assertCount(1, $aBlog->authors());
         $this->assertTrue($aBlog->isActive());
     }
 
@@ -135,12 +135,12 @@ class BlogTest extends TestCase
         $aBlog = BlogBuilder::aBlog()->build();
 
         $aBlog->appendAuthor(new Author(
-            $username = 'username',
-            $email = 'user@email.com',
+            $username = 'author_username',
+            $email = 'author_user@email.com',
             $fullName = 'John Doe'
         ));
 
-        $this->assertCount(1, $aBlog->authors());
+        $this->assertCount(2, $aBlog->authors());
 
         $events = $aBlog->releaseEvents();
         $lastEvent = end($events);
@@ -159,14 +159,14 @@ class BlogTest extends TestCase
         $aBlog = BlogBuilder::aBlog()->build();
 
         $aBlog->appendAuthor(new Author(
-            $username = 'username',
-            $email = 'user@email.com',
+            $username = 'author_username',
+            $email = 'author_user@email.com',
             $fullName = 'John Doe'
         ));
 
         $aBlog->appendAuthor(new Author(
-            $username = 'username',
-            $email = 'user@email.com',
+            $username = 'author_username',
+            $email = 'author_user@email.com',
             $fullName = 'John Doe'
         ));
     }
@@ -175,8 +175,8 @@ class BlogTest extends TestCase
     {
         $authors = [];
         $authors[] = new Author(
-                $username = 'username',
-                $email = 'user@email.com',
+                $username = 'author_username',
+                $email = 'author_user@email.com',
                 $fullName = 'John Doe'
             );
 
@@ -184,15 +184,15 @@ class BlogTest extends TestCase
             ->withAuthors($authors)
             ->build();
 
-        $this->assertCount(1, $aBlog->authors());
+        $this->assertCount(2, $aBlog->authors());
 
         $aBlog->detachAuthor(new Author(
-            $username = 'username',
-            $email = 'user@email.com',
+            $username = 'author_username',
+            $email = 'author_user@email.com',
             $fullName = 'John Doe'
         ));
 
-        $this->assertCount(0, $aBlog->authors());
+        $this->assertCount(1, $aBlog->authors());
 
         $events = $aBlog->releaseEvents();
         $lastEvent = end($events);
@@ -204,14 +204,32 @@ class BlogTest extends TestCase
         $this->assertEquals($fullName, $lastEvent->author()->fullName());
     }
 
+    public function testABlogOwnerCanCreatePost()
+    {
+        $aBlog = BlogBuilder::aBlog()->build();
+
+        $author = Author::fromOwner($aBlog->owner());
+
+        $aPost = $aBlog->createPost(
+            $postId = new PostId(1),
+            $title = new \Blog\Domain\Model\Post\Title('A Post Title'),
+            $content = 'A Post Content',
+            $author
+        );
+
+        $this->assertTrue($aPost->postId()->equals($postId));
+        $this->assertEquals($aPost->title(), $title);
+        $this->assertEquals($aPost->content(), $content);
+    }
+
     public function testABlogCanCreatePost()
     {
         $aBlog = BlogBuilder::aBlog()->build();
 
         $aBlog->appendAuthor(
             $author = new Author(
-                $username = 'username',
-                $email = 'user@email.com',
+                $username = 'author_username',
+                $email = 'author_user@email.com',
                 $fullName = 'John Doe'
             )
         );
@@ -226,7 +244,7 @@ class BlogTest extends TestCase
         $this->assertTrue($aPost->postId()->equals($postId));
         $this->assertEquals($aPost->title(), $title);
         $this->assertEquals($aPost->content(), $content);
-        $this->assertTrue($aPost->author()->equal($author));
+        $this->assertTrue($aPost->author()->equals($author));
     }
 
     public function testErrorCreatePostWhenAuthorNotFound()
@@ -240,8 +258,8 @@ class BlogTest extends TestCase
             new \Blog\Domain\Model\Post\Title('A Post Title'),
             'A Post Content',
             new Author(
-                $username = 'username',
-                $email = 'user@email.com',
+                $username = 'not_exist_username',
+                $email = 'not_exist_user@email.com',
                 $fullName = 'John Doe'
             )
         );

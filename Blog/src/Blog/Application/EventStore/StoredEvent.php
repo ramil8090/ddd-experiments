@@ -9,7 +9,7 @@
 namespace Blog\Application\EventStore;
 
 
-use Blog\Domain\DomainEvent;
+use Blog\Domain\Model\DomainEvent;
 
 class StoredEvent implements DomainEvent
 {

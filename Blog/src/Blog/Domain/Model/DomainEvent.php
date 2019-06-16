@@ -1,6 +1,6 @@
 <?php
 
-namespace Blog\Domain;
+namespace Blog\Domain\Model;
 
 
 interface DomainEvent

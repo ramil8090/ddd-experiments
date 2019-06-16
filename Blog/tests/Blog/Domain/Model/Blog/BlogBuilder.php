@@ -11,7 +11,6 @@ namespace Blog\Domain\Model\Blog;
 
 
 use Blog\Domain\Model\Member\Owner;
-use Blog\Domain\Model\User\UserId;
 
 class BlogBuilder
 {

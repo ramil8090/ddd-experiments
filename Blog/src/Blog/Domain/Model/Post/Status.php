@@ -55,13 +55,13 @@ class Status
         return $this->date;
     }
 
-    public function equal(Status $value): bool
+    public function equals(Status $value): bool
     {
         return $value->value() === $this->value;
     }
 
     public function __toString()
     {
-        return $this->value;
+        return $this->value.';'.$this->date->format('Y-m-d H:i:s');
     }
 }

@@ -3,15 +3,16 @@
  * Created by PhpStorm.
  * User: ramil
  * Date: 22.04.19
- * Time: 14:49
+ * Time: 15:07
  */
 
 namespace Blog\Domain\Model\Post;
 
 
 use Blog\Domain\Model\DomainEvent;
+use Blog\Domain\Model\Member\Moderator;
 
-class PostTitleUpdated implements DomainEvent
+class PostApproved implements DomainEvent
 {
     /**
      * @var \DateTimeImmutable
@@ -22,16 +23,15 @@ class PostTitleUpdated implements DomainEvent
      */
     private $postId;
     /**
-     * @var Title
+     * @var Moderator
      */
-    private $title;
+    private $moderator;
 
-
-    public function __construct(PostId $postId, Title $title)
+    public function __construct(PostId $postId, Moderator $moderator)
     {
         $this->postId = $postId;
-        $this->title = $title;
         $this->occurredOn = new \DateTimeImmutable();
+        $this->moderator = $moderator;
     }
 
     public function postId(): PostId
@@ -39,9 +39,9 @@ class PostTitleUpdated implements DomainEvent
         return $this->postId;
     }
 
-    public function title(): Title
+    public function moderator(): Moderator
     {
-        return $this->title;
+        return $this->moderator;
     }
 
     public function occurredOn(): \DateTimeImmutable

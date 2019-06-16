@@ -9,7 +9,7 @@
 namespace Blog\Infrastructure\Persistence\Doctrine\Type\Post;
 
 
-use Blog\Domain\Model\Post\Status;
+use Blog\Domain\Model\Blog\Post\Status;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 

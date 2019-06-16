@@ -11,9 +11,9 @@ namespace Blog\Application\Service\Post;
 
 use Blog\Application\DataTransformer\Post\PostDataTransformer;
 use Blog\Application\Service\ApplicationService;
-use Blog\Domain\Model\Post\PostId;
-use Blog\Domain\Model\Post\PostRepository;
-use Blog\Domain\Model\Post\Title;
+use Blog\Domain\Model\Blog\Post\PostId;
+use Blog\Domain\Model\Blog\Post\PostRepository;
+use Blog\Domain\Model\Blog\Post\Title;
 
 class UpdateTitlePostService implements ApplicationService
 {

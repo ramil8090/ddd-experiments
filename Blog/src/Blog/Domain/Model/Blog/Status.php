@@ -49,7 +49,7 @@ class Status
         return $this->date;
     }
 
-    public function equal(Status $status): bool
+    public function equals(Status $status): bool
     {
         return $status->status() === $this->status;
     }

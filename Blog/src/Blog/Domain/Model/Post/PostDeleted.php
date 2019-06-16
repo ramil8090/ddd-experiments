@@ -9,7 +9,8 @@
 namespace Blog\Domain\Model\Post;
 
 
-use Blog\Domain\DomainEvent;
+use Blog\Domain\Model\DomainEvent;
+use Blog\Domain\Model\Member\Moderator;
 
 class PostDeleted implements DomainEvent
 {
@@ -31,6 +32,11 @@ class PostDeleted implements DomainEvent
     public function postId(): PostId
     {
         return $this->postId;
+    }
+
+    public function moderator(): Moderator
+    {
+        return $this->moderator;
     }
 
     public function occurredOn(): \DateTimeImmutable

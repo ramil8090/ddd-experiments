@@ -9,11 +9,27 @@
 namespace Blog\Domain\Model\Member;
 
 
+use Blog\Domain\Model\Blog\BlogId;
+
 interface MemberService
 {
     /**
-     * @param UserId $userId
+     * @param string $username
      * @return Moderator|null
      */
-    public function moderatorFrom(UserId $userId): ?Moderator;
+    public function moderatorFrom(string $username): ?Moderator;
+
+    /**
+     * @param BlogId $blogId
+     * @param string $username
+     * @return Owner|null
+     */
+    public function ownerFrom(BlogId $blogId, string $username): ?Owner;
+
+    /**
+     * @param BlogId $blogId
+     * @param string $username
+     * @return Author|null
+     */
+    public function authorFrom(BlogId $blogId, string $username): ?Author;
 }

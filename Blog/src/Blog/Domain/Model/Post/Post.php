@@ -3,17 +3,16 @@
 namespace Blog\Domain\Model\Post;
 
 
-use Blog\Domain\AggregateRoot;
-use Blog\Domain\DomainEventPublisher;
-use Blog\Domain\EventTrait;
+use Assert\Assertion;
 use Blog\Domain\Model\Blog\Blog;
+use Blog\Domain\Model\DomainEventPublisher;
 use Blog\Domain\Model\Blog\BlogId;
 use Blog\Domain\Model\Member\Author;
+use Blog\Domain\Model\Member\Moderator;
+use Blog\Domain\Model\Member\Owner;
 
-class Post implements AggregateRoot
+class Post
 {
-    use EventTrait;
-
     /**
      * @var PostId
      */
@@ -22,6 +21,10 @@ class Post implements AggregateRoot
      * @var BlogId
      */
     private $blogId;
+    /**
+     * Owner
+     */
+    private $owner;
     /**
      * @var Author
      */
@@ -39,48 +42,133 @@ class Post implements AggregateRoot
      */
     private $status;
 
-
-    public function __construct(
+    protected function __construct(
         PostId $postId,
         BlogId $blogId,
+        Owner $owner,
         Author $author,
         Title $title,
-        string $content)
+        string $content
+    )
     {
         $this->postId = $postId;
         $this->blogId = $blogId;
+        $this->owner = $owner;
         $this->author = $author;
         $this->title = $title;
         $this->content = $content;
 
         $this->status = Status::newPost();
 
-        $this->recordEvent(new PostCreated(
+        DomainEventPublisher::instance()->publish(new PostCreated(
             $postId
         ));
     }
 
-    public function publish(): void
+    public static function create(
+        PostId $postId,
+        Blog $blog,
+        Owner $owner,
+        Author $author,
+        Title $title,
+        string $content
+    ): Post
     {
-        if ($this->status->equal(Status::deleted())) {
-            throw new \DomainException('A post is deleted.');
+
+        if (!$blog->hasAuthor($author)) {
+            throw new \DomainException("Author not found");
         }
 
-        if ($this->status->equal(Status::published())) {
-            throw new \DomainException('A post is already published.');
-        }
+        return new Post(
+            $postId,
+            $blog->blogId(),
+            $owner,
+            $author,
+            $title,
+            $content
+        );
+    }
 
-        $this->status = Status::published();
-        $this->publishedAt = new \DateTimeImmutable();
+    public function approve(Moderator $moderator): void
+    {
+        $this->assertNotRejected();
+        $this->assertNotDeleted();
 
-        DomainEventPublisher::instance()->publish(new PostPublished(
-            $this->postId
+        $this->status = Status::approved();
+
+        DomainEventPublisher::instance()->publish(new PostApproved(
+            $this->postId,
+            $moderator
         ));
     }
 
-    public function delete(): void
+    public function reject(Moderator $moderator): void
     {
-        if ($this->status->equal(Status::deleted())) {
+        $this->assertNotRejected();
+        $this->assertNotDeleted();
+
+        $this->status = Status::rejected();
+
+        DomainEventPublisher::instance()->publish(new PostRejected(
+            $this->postId,
+            $moderator
+        ));
+    }
+
+    private function assertNotRejected(): void
+    {
+        if ($this->status->equals(Status::rejected())) {
+            throw new \DomainException("Can't reject rejected post");
+        }
+    }
+
+    private function assertNotDeleted(): void
+    {
+        if ($this->status->equals(Status::deleted())) {
+            throw new \DomainException("Can't reject deleted post");
+        }
+    }
+
+    public function deleteByAuthor(Author $author): void
+    {
+        $this->assertAuthor($author);
+
+        $this->delete();
+    }
+
+    public function deleteByOwner(Owner $owner): void
+    {
+        $this->assertOwner($owner);
+
+        $this->delete();
+    }
+
+    private function assertAuthor(Author $author): void
+    {
+        if ($this->author->equals($author)) {
+            return;
+        }
+
+        throw new \DomainException("Wrong post author.");
+    }
+
+    private function assertOwner(Owner $owner): void
+    {
+        if($this->owner->equals($owner)) {
+            return;
+        }
+
+        throw new \DomainException("Wrong post owner.");
+    }
+
+    public function deleteByModerator(Moderator $moderator): void
+    {
+        $this->delete();
+    }
+
+    protected function delete(): void
+    {
+        if ($this->status->equals(Status::deleted())) {
             throw new \DomainException('A post is already deleted.');
         }
 
@@ -91,13 +179,31 @@ class Post implements AggregateRoot
         ));
     }
 
-    public function isDeleted(): bool
+    public function updateTitleByAuthor(Author $author, Title $title): void
     {
-        return $this->status->equal(Status::deleted());
+        $this->assertAuthor($author);
+
+        $this->updateTitle($title);
     }
 
-    public function updateTitle(Title $title): void
+    public function updateTitleByOwner(Owner $owner, Title $title): void
     {
+        $this->assertOwner($owner);
+
+        $this->updateTitle($title);
+    }
+
+    public function updateTitleByModerator(Moderator $moderator, Title $title): void
+    {
+        Assertion::notNull($moderator);
+
+        $this->updateTitle($title);
+    }
+
+    protected function updateTitle($title): void
+    {
+        Assertion::notEmpty($title);
+
         $this->title = $title;
 
         DomainEventPublisher::instance()->publish(new PostTitleUpdated(
@@ -106,24 +212,37 @@ class Post implements AggregateRoot
         ));
     }
 
-    public function updateBody(string $content): void
+    public function updateContentByOwner(Owner $owner, string $content): void
     {
+        $this->assertOwner($owner);
+
+        $this->updateContent($content);
+    }
+
+    public function updateContentByAuthor(Author $author, string $content): void
+    {
+        $this->assertAuthor($author);
+
+        $this->updateContent($content);
+    }
+
+    public function updateContentByModerator(Moderator $moderator, string $content): void
+    {
+        Assertion::notNull($moderator);
+
+        $this->updateContent($content);
+    }
+
+    protected function updateContent(string $content): void
+    {
+        Assertion::notEmpty($content);
+
         $this->content = $content;
 
-        DomainEventPublisher::instance()->publish(new PostBodyUpdated(
+        DomainEventPublisher::instance()->publish(new PostContentUpdated(
             $this->postId,
             $content
         ));
-    }
-
-    public function isAuthor(Author $author): bool
-    {
-        return $this->author->equal($author);
-    }
-
-    public function belongsTo(BlogId $blogId): bool
-    {
-        return $this->blogId->getId() === $blogId->getId();
     }
 
     public function postId(): PostId
@@ -146,9 +265,18 @@ class Post implements AggregateRoot
         return $this->author;
     }
 
+    public function owner(): Owner
+    {
+        return $this->owner;
+    }
+
     public function title(): Title
     {
         return $this->title;
     }
 
+    public function status(): Status
+    {
+        return $this->status;
+    }
 }

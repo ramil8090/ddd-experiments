@@ -11,5 +11,12 @@ namespace Blog\Domain\Model\Member;
 
 class Author extends Member
 {
-
+    public static function fromOwner(Owner $owner): Author
+    {
+        return new Author(
+          $owner->username(),
+          $owner->email(),
+          $owner->fullName()
+        );
+    }
 }

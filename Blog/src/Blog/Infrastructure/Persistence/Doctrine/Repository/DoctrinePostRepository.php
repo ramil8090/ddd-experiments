@@ -9,9 +9,9 @@
 namespace Blog\Infrastructure\Persistence\Doctrine\Repository;
 
 
-use Blog\Domain\Model\Post\Post;
-use Blog\Domain\Model\Post\PostId;
-use Blog\Domain\Model\Post\PostRepository;
+use Blog\Domain\Model\Blog\Post\Post;
+use Blog\Domain\Model\Blog\Post\PostId;
+use Blog\Domain\Model\Blog\Post\PostRepository;
 use Doctrine\ORM\EntityManager;
 use Ramsey\Uuid\Uuid;
 

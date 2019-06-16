@@ -9,7 +9,7 @@
 namespace Blog\Domain\Model\Post;
 
 
-use Blog\Domain\DomainEvent;
+use Blog\Domain\Model\DomainEvent;
 
 class PostCreated implements DomainEvent
 {

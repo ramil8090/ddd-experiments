@@ -9,9 +9,9 @@
 namespace Blog\Infrastructure\Persistence\Doctrine\Repository\Notification;
 
 
-use Blog\Domain\Event\EventStore;
-use Blog\Domain\DomainEvent;
-use Blog\Domain\Event\StoredEvent;
+use Blog\Application\EventStore\EventStore;
+use Blog\Domain\Model\DomainEvent;
+use Blog\Application\EventStore\StoredEvent;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;

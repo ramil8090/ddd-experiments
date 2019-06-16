@@ -41,7 +41,7 @@ class Member
         return $this->fullName;
     }
 
-    public function equal(Member $member): bool
+    public function equals(Member $member): bool
     {
         return $this->username() == $member->username()
             && $this->email() == $member->email()

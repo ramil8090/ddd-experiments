@@ -10,8 +10,8 @@ namespace Blog\Application;
 
 
 use Blog\Application\EventStore\EventStore;
-use Blog\Domain\DomainEvent;
-use Blog\Domain\DomainEventSubscriber;
+use Blog\Domain\Model\DomainEvent;
+use Blog\Domain\Model\DomainEventSubscriber;
 
 class PersistDomainEventSubscriber implements DomainEventSubscriber
 {

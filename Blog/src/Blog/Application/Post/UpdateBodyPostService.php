@@ -11,58 +11,45 @@ namespace Blog\Application\Service\Post;
 
 use Blog\Application\DataTransformer\Post\PostDataTransformer;
 use Blog\Application\Service\ApplicationService;
-use Blog\Domain\Model\Blog\BlogId;
-use Blog\Domain\Model\Blog\BlogRepository;
-use Blog\Domain\Model\Post\Post;
-use Blog\Domain\Model\Post\PostRepository;
-use Blog\Domain\Model\Post\Title;
+use Blog\Domain\Model\Blog\Post\PostId;
+use Blog\Domain\Model\Blog\Post\PostRepository;
 
-class CreatePostService implements ApplicationService
+class UpdateBodyPostService implements ApplicationService
 {
-
-    /**
-     * @var BlogRepository
-     */
-    private $blogRepository;
     /**
      * @var PostRepository
      */
     private $postRepository;
+
     /**
      * @var PostDataTransformer
      */
     private $postDataTransformer;
 
     public function __construct(
-        BlogRepository $blogRepository,
         PostRepository $postRepository,
         PostDataTransformer $postDataTransformer
     )
     {
-        $this->blogRepository = $blogRepository;
         $this->postRepository = $postRepository;
         $this->postDataTransformer = $postDataTransformer;
     }
 
     /**
-     * @param CreatePostRequest $request
+     * @param UpdateBodyPostRequest $request
      * @return mixed
      */
     public function execute($request = null)
     {
-        $blog = $this->blogRepository->blogOfId(new BlogId($request->blogId()));
+        $post = $this->postRepository->postOfId(new PostId($request->postId()));
 
-        if ($blog == null) {
-            throw new \DomainException("Blog not found");
+        if ($post == null) {
+            throw new \DomainException("Post not found");
         }
 
-        $post = $blog->createPost(
-            $this->postRepository->nextIdentity(),
-            new Title($request->title()),
-            $request->body()
-        );
+        $post->updateBody($request->body());
 
-        $this->postRepository->add($post);
+        $this->postRepository->save($post);
 
         $this->postDataTransformer->write($post);
 

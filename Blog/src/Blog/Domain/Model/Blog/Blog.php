@@ -3,8 +3,8 @@
 namespace Blog\Domain\Model\Blog;
 
 
-use Blog\Domain\AggregateRoot;
-use Blog\Domain\EventTrait;
+use Blog\Domain\Model\AggregateRoot;
+use Blog\Domain\Model\EventTrait;
 use Blog\Domain\Model\Member\Author;
 use Blog\Domain\Model\Member\Owner;
 use Blog\Domain\Model\Post\Post;
@@ -31,7 +31,7 @@ class Blog implements AggregateRoot
      */
     private $status;
     /**
-     * @var array
+     * @var Author[]
      */
     private $authors;
 
@@ -45,26 +45,32 @@ class Blog implements AggregateRoot
         $this->owner = $owner;
         $this->title = $title;
         $this->status = Status::active();
-        $this->authors = [];
+        $this->addOwnerToAuthors($owner);
 
         $this->recordEvent(new BlogCreated(
             $blogId
         ));
     }
 
+    private function addOwnerToAuthors(Owner $owner): void
+    {
+        $this->authors = [];
+        $this->authors[] = Author::fromOwner($owner);
+    }
+
     public function isActive(): bool
     {
-        return $this->status->equal(Status::active());
+        return $this->status->equals(Status::active());
     }
 
     public function isArchived(): bool
     {
-        return $this->status->equal(Status::archived());
+        return $this->status->equals(Status::archived());
     }
 
     public function archive(): void
     {
-        if ($this->status->equal(Status::archived())) {
+        if ($this->status->equals(Status::archived())) {
             throw new \DomainException('A blog is already archived.');
         }
 
@@ -77,7 +83,7 @@ class Blog implements AggregateRoot
 
     public function restore(): void
     {
-        if ($this->status->equal(Status::active())) {
+        if ($this->status->equals(Status::active())) {
             throw new \DomainException('A blog is already active.');
         }
 
@@ -104,6 +110,10 @@ class Blog implements AggregateRoot
 
     public function detachAuthor(Author $author): void
     {
+        if ($this->owner->equals($author)) {
+            throw new \DomainException("Can't detach owner from authors");
+        }
+
         $index = array_search($author, $this->authors);
         if ( $index !== false ) {
 
@@ -119,7 +129,7 @@ class Blog implements AggregateRoot
     public function hasAuthor(Author $author): bool
     {
         $author = array_filter($this->authors, function ($currentAuthor) use ($author) {
-            if ($currentAuthor->equal($author)) {
+            if ($currentAuthor->equals($author)) {
                 return $currentAuthor;
             }
         });
@@ -142,9 +152,10 @@ class Blog implements AggregateRoot
             throw new \DomainException("An author not found.");
         }
 
-        return new Post(
+        return Post::create(
             $postId,
-            $this->blogId,
+            $this,
+            $this->owner(),
             $author,
             $title,
             $content

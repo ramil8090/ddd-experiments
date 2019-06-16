@@ -9,7 +9,10 @@
 namespace Blog\Domain\Model\Post;
 
 
+use Blog\Domain\Model\Blog\Blog;
 use Blog\Domain\Model\Blog\BlogId;
+use Blog\Domain\Model\Member\Author;
+use Blog\Domain\Model\Member\Owner;
 use Blog\Domain\Model\User\UserId;
 
 class PostBuilder
@@ -19,9 +22,9 @@ class PostBuilder
      */
     private $postId;
     /**
-     * @var BlogId
+     * @var Blog
      */
-    private $blogId;
+    private $blog;
     /**
      * @var Title
      */
@@ -29,19 +32,40 @@ class PostBuilder
     /**
      * @var string
      */
-    private $body;
+    private $content;
     /**
-     * @var UserId
+     * @var Author
      */
-    private $userId;
+    private $author;
+    /**
+     * @var Owner
+     */
+    private $owner;
 
     private function __construct()
     {
         $this->postId = new PostId(1);
-        $this->blogId = new BlogId(1);
-        $this->body = 'A Post Body';
+        $this->blog = new Blog(
+            new BlogId(1),
+            new Owner(
+                'username',
+                'user@email.com',
+                'John Doe'
+            ),
+            new \Blog\Domain\Model\Blog\Title('Blog Title')
+        );
+        $this->content = 'A Post Content';
         $this->title = new Title('A Post Title');
-        $this->userId = new UserId(1);
+        $this->author = new Author(
+            'username',
+            'user@email.com',
+            'John Doe'
+        );
+        $this->owner = new Owner(
+            'username',
+            'user@email.com',
+            'John Doe'
+        );
     }
 
     public static function aPost(): self
@@ -56,9 +80,9 @@ class PostBuilder
         return $this;
     }
 
-    public function withBody($body): self
+    public function withContent(string $content): self
     {
-        $this->body = $body;
+        $this->content = $content;
 
         return $this;
     }
@@ -70,28 +94,36 @@ class PostBuilder
         return $this;
     }
 
-    public function withUserId(UserId $userId): self
+    public function withAuthor(Author $author): self
     {
-        $this->userId = $userId;
+        $this->author = $author;
 
         return $this;
     }
 
-    public function withBlogId(BlogId $blogId): self
+    public function withOwner(Owner $owner): self
     {
-        $this->blogId = $blogId;
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function withBlog(Blog $blog): self
+    {
+        $this->blog = $blog;
 
         return $this;
     }
 
     public function build(): Post
     {
-        return new Post(
+        return Post::create(
             $this->postId,
-            $this->blogId,
-            $this->userId,
+            $this->blog,
+            $this->owner,
+            $this->author,
             $this->title,
-            $this->body
+            $this->content
         );
     }
 }

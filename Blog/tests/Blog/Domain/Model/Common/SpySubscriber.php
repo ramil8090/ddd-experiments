@@ -2,8 +2,8 @@
 
 namespace Blog\Domain\Model\Common;
 
-use Blog\Domain\DomainEvent;
-use Blog\Domain\DomainEventSubscriber;
+use Blog\Domain\Model\DomainEvent;
+use Blog\Domain\Model\DomainEventSubscriber;
 
 class SpySubscriber implements DomainEventSubscriber
 {

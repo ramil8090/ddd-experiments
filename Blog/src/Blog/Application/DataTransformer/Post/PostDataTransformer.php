@@ -9,7 +9,7 @@
 namespace Blog\Application\DataTransformer\Post;
 
 
-use Blog\Domain\Model\Post\Post;
+use Blog\Domain\Model\Blog\Post\Post;
 
 interface PostDataTransformer
 {

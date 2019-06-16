@@ -6,7 +6,7 @@
  * Time: 16:21
  */
 
-namespace Blog\Domain;
+namespace Blog\Domain\Model;
 
 
 trait EventTrait

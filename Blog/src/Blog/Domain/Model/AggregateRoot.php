@@ -6,7 +6,7 @@
  * Time: 16:22
  */
 
-namespace Blog\Domain;
+namespace Blog\Domain\Model;
 
 
 interface AggregateRoot
