@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class PostTest extends TestCase
 {
-    public function testANewPostIsNotPublishedByDefault()
+    public function testCreateANewPostSuccessfully()
     {
         $blog = new Blog(
             new BlogId(1),
@@ -34,7 +34,6 @@ class PostTest extends TestCase
         $aPost = PostBuilder::aPost()
             ->withPostId($postId = new PostId(1))
             ->withBlog($blog)
-            ->withOwner($owner)
             ->withAuthor($author)
             ->withTitle($title = new Title('A Post Title'))
             ->withContent($content = "A Post Content")

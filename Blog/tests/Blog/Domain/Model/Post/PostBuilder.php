@@ -37,10 +37,6 @@ class PostBuilder
      * @var Author
      */
     private $author;
-    /**
-     * @var Owner
-     */
-    private $owner;
 
     private function __construct()
     {
@@ -57,11 +53,6 @@ class PostBuilder
         $this->content = 'A Post Content';
         $this->title = new Title('A Post Title');
         $this->author = new Author(
-            'username',
-            'user@email.com',
-            'John Doe'
-        );
-        $this->owner = new Owner(
             'username',
             'user@email.com',
             'John Doe'
@@ -101,13 +92,6 @@ class PostBuilder
         return $this;
     }
 
-    public function withOwner(Owner $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     public function withBlog(Blog $blog): self
     {
         $this->blog = $blog;
@@ -120,7 +104,6 @@ class PostBuilder
         return Post::create(
             $this->postId,
             $this->blog,
-            $this->owner,
             $this->author,
             $this->title,
             $this->content
