@@ -1,7 +1,7 @@
 Blog\Domain\Event\PublishedMessage:
   type: entity
   table: event_published_message_tracker
-  repositoryClass: Blog\Infrastructure\Persistence\Doctrine\Repository\Notification\DoctrinePublishedMessageTracker
+  repositoryClass: Blog\Infrastructure\Persistence\Doctrine\DoctrinePublishedMessageTracker
   id:
     trackerId:
       column: tracker_id

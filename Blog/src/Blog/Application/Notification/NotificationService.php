@@ -11,8 +11,8 @@ namespace Blog\Application\Service\Notification;
 
 
 
-use Blog\Domain\Event\EventStore;
-use Blog\Domain\Event\StoredEvent;
+use Blog\Application\EventStore\EventStore;
+use Blog\Application\EventStore\StoredEvent;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 

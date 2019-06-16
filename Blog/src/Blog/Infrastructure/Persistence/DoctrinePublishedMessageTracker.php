@@ -6,12 +6,12 @@
  * Time: 11:56
  */
 
-namespace Blog\Infrastructure\Notification;
+namespace Blog\Infrastructure\Persistence;
 
 
 use Blog\Application\Service\Notification\PublishedMessageTracker;
-use Blog\Domain\Event\PublishedMessage;
-use Blog\Domain\Event\StoredEvent;
+use Blog\Application\EventStore\PublishedMessage;
+use Blog\Application\EventStore\StoredEvent;
 use Doctrine\ORM\EntityManager;
 
 class DoctrinePublishedMessageTracker implements PublishedMessageTracker
