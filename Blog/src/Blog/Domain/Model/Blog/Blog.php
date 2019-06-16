@@ -155,7 +155,6 @@ class Blog implements AggregateRoot
         return Post::create(
             $postId,
             $this,
-            $this->owner(),
             $author,
             $title,
             $content

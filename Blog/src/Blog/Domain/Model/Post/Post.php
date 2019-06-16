@@ -68,28 +68,30 @@ class Post
     public static function create(
         PostId $postId,
         Blog $blog,
-        Owner $owner,
         Author $author,
         Title $title,
         string $content
     ): Post
     {
+        if ($blog->isArchived()) {
+            throw new \DomainException("Can't create post. Blog is archived.");
+        }
 
         if (!$blog->hasAuthor($author)) {
-            throw new \DomainException("Author not found");
+            throw new \DomainException("Author not found.");
         }
 
         return new Post(
             $postId,
             $blog->blogId(),
-            $owner,
+            $blog->owner(),
             $author,
             $title,
             $content
         );
     }
 
-    public function approve(Moderator $moderator): void
+    public function approve(): void
     {
         $this->assertNotRejected();
         $this->assertNotDeleted();
@@ -97,12 +99,11 @@ class Post
         $this->status = Status::approved();
 
         DomainEventPublisher::instance()->publish(new PostApproved(
-            $this->postId,
-            $moderator
+            $this->postId
         ));
     }
 
-    public function reject(Moderator $moderator): void
+    public function reject(): void
     {
         $this->assertNotRejected();
         $this->assertNotDeleted();
@@ -110,8 +111,7 @@ class Post
         $this->status = Status::rejected();
 
         DomainEventPublisher::instance()->publish(new PostRejected(
-            $this->postId,
-            $moderator
+            $this->postId
         ));
     }
 
@@ -129,44 +129,44 @@ class Post
         }
     }
 
-    public function deleteByAuthor(Author $author): void
-    {
-        $this->assertAuthor($author);
+//    public function deleteByAuthor(Author $author): void
+//    {
+//        $this->assertAuthor($author);
+//
+//        $this->delete();
+//    }
+//
+//    public function deleteByOwner(Owner $owner): void
+//    {
+//        $this->assertOwner($owner);
+//
+//        $this->delete();
+//    }
+//
+//    private function assertAuthor(Author $author): void
+//    {
+//        if ($this->author->equals($author)) {
+//            return;
+//        }
+//
+//        throw new \DomainException("Wrong post author.");
+//    }
+//
+//    private function assertOwner(Owner $owner): void
+//    {
+//        if($this->owner->equals($owner)) {
+//            return;
+//        }
+//
+//        throw new \DomainException("Wrong post owner.");
+//    }
+//
+//    public function deleteByModerator(Moderator $moderator): void
+//    {
+//        $this->delete();
+//    }
 
-        $this->delete();
-    }
-
-    public function deleteByOwner(Owner $owner): void
-    {
-        $this->assertOwner($owner);
-
-        $this->delete();
-    }
-
-    private function assertAuthor(Author $author): void
-    {
-        if ($this->author->equals($author)) {
-            return;
-        }
-
-        throw new \DomainException("Wrong post author.");
-    }
-
-    private function assertOwner(Owner $owner): void
-    {
-        if($this->owner->equals($owner)) {
-            return;
-        }
-
-        throw new \DomainException("Wrong post owner.");
-    }
-
-    public function deleteByModerator(Moderator $moderator): void
-    {
-        $this->delete();
-    }
-
-    protected function delete(): void
+    public function delete(): void
     {
         if ($this->status->equals(Status::deleted())) {
             throw new \DomainException('A post is already deleted.');
@@ -179,30 +179,31 @@ class Post
         ));
     }
 
-    public function updateTitleByAuthor(Author $author, Title $title): void
-    {
-        $this->assertAuthor($author);
+//    public function updateTitleByAuthor(Author $author, Title $title): void
+//    {
+//        $this->assertAuthor($author);
+//
+//        $this->updateTitle($title);
+//    }
+//
+//    public function updateTitleByOwner(Owner $owner, Title $title): void
+//    {
+//        $this->assertOwner($owner);
+//
+//        $this->updateTitle($title);
+//    }
+//
+//    public function updateTitleByModerator(Moderator $moderator, Title $title): void
+//    {
+//        Assertion::notNull($moderator);
+//
+//        $this->updateTitle($title);
+//    }
 
-        $this->updateTitle($title);
-    }
-
-    public function updateTitleByOwner(Owner $owner, Title $title): void
-    {
-        $this->assertOwner($owner);
-
-        $this->updateTitle($title);
-    }
-
-    public function updateTitleByModerator(Moderator $moderator, Title $title): void
-    {
-        Assertion::notNull($moderator);
-
-        $this->updateTitle($title);
-    }
-
-    protected function updateTitle($title): void
+    public function updateTitle($title): void
     {
         Assertion::notEmpty($title);
+        $this->assertNotDeleted();
 
         $this->title = $title;
 
@@ -212,30 +213,31 @@ class Post
         ));
     }
 
-    public function updateContentByOwner(Owner $owner, string $content): void
-    {
-        $this->assertOwner($owner);
+//    public function updateContentByOwner(Owner $owner, string $content): void
+//    {
+//        $this->assertOwner($owner);
+//
+//        $this->updateContent($content);
+//    }
+//
+//    public function updateContentByAuthor(Author $author, string $content): void
+//    {
+//        $this->assertAuthor($author);
+//
+//        $this->updateContent($content);
+//    }
+//
+//    public function updateContentByModerator(Moderator $moderator, string $content): void
+//    {
+//        Assertion::notNull($moderator);
+//
+//        $this->updateContent($content);
+//    }
 
-        $this->updateContent($content);
-    }
-
-    public function updateContentByAuthor(Author $author, string $content): void
-    {
-        $this->assertAuthor($author);
-
-        $this->updateContent($content);
-    }
-
-    public function updateContentByModerator(Moderator $moderator, string $content): void
-    {
-        Assertion::notNull($moderator);
-
-        $this->updateContent($content);
-    }
-
-    protected function updateContent(string $content): void
+    public function updateContent(string $content): void
     {
         Assertion::notEmpty($content);
+        $this->assertNotDeleted();
 
         $this->content = $content;
 
