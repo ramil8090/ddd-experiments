@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ramil
- * Date: 24.04.19
- * Time: 16:07
- */
 
-namespace Blog\Infrastructure\Persistence\Doctrine\Type\Post;
+namespace Blog\Infrastructure\Persistence\Doctrine\Type\Blog;
 
 
-use Blog\Domain\Model\Post\Status;
+use Blog\Domain\Model\Blog\Title;
+use Blog\Domain\Model\Member\Owner;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-class DoctrineStatusType extends Type
+class DoctrineOwnerType extends Type
 {
 
     /**
@@ -38,35 +33,35 @@ class DoctrineStatusType extends Type
      */
     public function getName()
     {
-        return 'status';
+        return 'owner';
     }
 
     /**
-     * @param Status $value
+     * @param Owner $value
      * @param AbstractPlatform $platform
      * @return string
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $value->status();
+        return json_encode([
+            'username' => $value->username(),
+            'email' => $value->email(),
+            'full_name' => $value->fullName()
+        ]);
     }
 
     /**
      * @param string $value
      * @param AbstractPlatform $platform
-     * @return Status
+     * @return Owner
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        switch ($value) {
-            case Status::NEW:
-                return  Status::newPost();
-            case Status::APPROVED:
-                return Status::approved();
-            case Status::REJECTED:
-                return Status::rejected();
-            case Status::DELETED:
-                return Status::deleted();
-        }
+        $values = json_decode($value, true);
+        return new Owner(
+            $values['username'],
+            $values['email'],
+            $values['full_name']
+        );
     }
 }

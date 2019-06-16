@@ -43,8 +43,12 @@ trait CreateDoctrinePostRepositoryTrait
             Type::addType('PostStatus', '\Blog\Infrastructure\Persistence\Doctrine\Type\Post\DoctrineStatusType');
         }
 
-        if (!Type::hasType('UserId')) {
-            Type::addType('UserId', '\Blog\Infrastructure\Persistence\Doctrine\Type\User\DoctrineUserIdType');
+        if (!Type::hasType('Author')) {
+            Type::addType('Author', '\Blog\Infrastructure\Persistence\Doctrine\Type\Member\DoctrineAuthorType');
+        }
+
+        if (!Type::hasType('Owner')) {
+            Type::addType('Owner', '\Blog\Infrastructure\Persistence\Doctrine\Type\Member\DoctrineOwnerType');
         }
 
         if (!Type::hasType('BlogId')) {

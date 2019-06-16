@@ -6,7 +6,7 @@
  * Time: 17:19
  */
 
-namespace Blog\Infrastructure\Persistence\Doctrine\Repository;
+namespace Blog\Infrastructure\Persistence;
 
 
 use Blog\Domain\Model\Blog\Blog;

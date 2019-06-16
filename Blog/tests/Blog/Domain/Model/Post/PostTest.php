@@ -46,22 +46,22 @@ class PostTest extends TestCase
         $this->assertEquals($title, $aPost->title());
         $this->assertEquals($content, $aPost->content());
     }
-
-    public function testAPostCanBeApprovedByModerator()
-    {
-        $aPost = PostBuilder::aPost()->build();
-        $moderator = new Moderator(
-            'moderator_username',
-            'moderator@email.com',
-            'Moderator Full Name'
-        );
-
-        $aPost->publish();
-
-        $this->assertTrue($aPost->isPublished());
-
-        $this->assertInstanceOf('DateTimeImmutable', $aPost->publicationDate());
-    }
+//
+//    public function testAPostCanBeApprovedByModerator()
+//    {
+//        $aPost = PostBuilder::aPost()->build();
+//        $moderator = new Moderator(
+//            'moderator_username',
+//            'moderator@email.com',
+//            'Moderator Full Name'
+//        );
+//
+//        $aPost->publish();
+//
+//        $this->assertTrue($aPost->isPublished());
+//
+//        $this->assertInstanceOf('DateTimeImmutable', $aPost->publicationDate());
+//    }
 
 //    public function testAPostCanBeDeleted()
 //    {

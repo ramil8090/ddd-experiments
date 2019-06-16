@@ -43,8 +43,12 @@ trait CreateDoctrineBlogRepositoryTrait
             Type::addType('BlogStatus', '\Blog\Infrastructure\Persistence\Doctrine\Type\Blog\DoctrineStatusType');
         }
 
-        if (!Type::hasType('UserId')) {
-            Type::addType('UserId', '\Blog\Infrastructure\Persistence\Doctrine\Type\User\DoctrineUserIdType');
+        if (!Type::hasType('Owner')) {
+            Type::addType('Owner', '\Blog\Infrastructure\Persistence\Doctrine\Type\Member\DoctrineOwnerType');
+        }
+
+        if (!Type::hasType('Authors')) {
+            Type::addType('Authors', '\Blog\Infrastructure\Persistence\Doctrine\Type\Blog\DoctrineAuthorsType');
         }
 
     }

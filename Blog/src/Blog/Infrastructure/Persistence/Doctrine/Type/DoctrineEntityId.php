@@ -6,7 +6,7 @@
  * Time: 16:42
  */
 
-namespace Blog\Infrastructure\Persistence\Doctrine\Type\Common;
+namespace Blog\Infrastructure\Persistence\Doctrine\Type;
 
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;

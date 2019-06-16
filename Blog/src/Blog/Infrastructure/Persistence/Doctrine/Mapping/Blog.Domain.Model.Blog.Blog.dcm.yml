@@ -7,9 +7,12 @@ Blog\Domain\Model\Blog\Blog:
   table: blogs
   repositoryClass: Blog\Infrastructure\Persistence\Doctrine\Repository\DoctrineBlogRepository
   fields:
-    userId:
-      column: user_id
-      type: UserId
+    owner:
+      column: owner
+      type: Member
+    authors:
+      column: authors
+      type: Authors
     title:
       column: title
       type: BlogTitle

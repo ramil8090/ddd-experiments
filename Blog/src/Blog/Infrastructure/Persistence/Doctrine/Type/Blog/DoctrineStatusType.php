@@ -61,8 +61,8 @@ class DoctrineStatusType extends Type
         switch ($value) {
             case Status::ACTIVE:
                 return  Status::active();
-            case Status::DELETED:
-                return Status::deleted();
+            case Status::ARCHIVED:
+                return Status::archived();
         }
     }
 }

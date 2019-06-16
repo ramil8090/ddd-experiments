@@ -6,7 +6,7 @@
  * Time: 11:50
  */
 
-namespace Blog\Infrastructure\Persistence\Doctrine\Repository\Notification;
+namespace Blog\Infrastructure\Persistence;
 
 
 use Blog\Application\EventStore\EventStore;

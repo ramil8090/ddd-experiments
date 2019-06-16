@@ -6,7 +6,7 @@
  * Time: 11:56
  */
 
-namespace Blog\Infrastructure\Persistence\Doctrine\Repository\Notification;
+namespace Blog\Infrastructure\Notification;
 
 
 use Blog\Application\Service\Notification\PublishedMessageTracker;
